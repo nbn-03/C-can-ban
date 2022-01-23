@@ -1,0 +1,130 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <time.h>
+#include <conio.h>
+#define MAX 100
+#define true 1
+#define false 0
+ 
+int genRandomValue (int min, int max)
+{
+    return min + rand()%(max-min+1);
+}
+ 
+void genRandomArray (int a[], int n)
+{
+    for (int i=0; i<n; i++)
+        a[i] = genRandomValue(10,99);
+}
+ 
+void printArray (int a[], int n)
+{
+    for (int i=0; i<n; i++)
+        printf("%d ",a[i]);
+    printf("\n");
+}
+ 
+int getPrizeNum ()
+{
+    int randomNumber = rand()%100;
+    if (randomNumber<80)
+        return 1;
+    if (randomNumber<90)
+        return 2;
+    if (randomNumber<95)
+        return 3;
+    if (randomNumber<99)
+        return 4;
+    return 5;
+}
+ 
+void printReward (int prizeNum)
+{
+    if (prizeNum == 1)
+    {
+        printf("\tChuc ban may man lan sau\n");
+    }
+    else if (prizeNum == 2)
+    {
+        printf("\tChuc mung, ban duoc mien phi 1 luot quay\n");
+    }
+    else if (prizeNum == 3)
+    {
+        printf("\tChuc mung, ban duoc 50k\n");
+    }
+    else if (prizeNum == 4)
+    {
+        printf("\tChuc mung, ban duoc 1m\n");
+    }
+    else
+    {
+        printf("\tChuc mung, ban duoc 10m\n");
+    }
+}
+ 
+int withdraw (int userBalance, int amount)
+{
+    return userBalance-amount;
+}
+ 
+int add (int userBalance, int amount)
+{
+    return userBalance+amount;
+}
+ 
+void printResult (int userBalance)
+{
+    if (userBalance < 10000)
+    {
+        printf("\tBan con %d VND, GAME OVER\n",userBalance);
+    }
+    else
+    {
+        printf("\tBan co %d VND, xin chuc mung\n",userBalance);
+    }
+}
+ 
+int main()
+{
+    srand(time(NULL));
+    int a[MAX];
+    int userBalance = 100000;
+    while (true)        //GAME LOOP
+    {
+        //Thông báo số tiền người chơi có
+        printf("\t\tBalance: %d\n",userBalance);
+ 
+        //Nếu không đủ tiền quay thì in GAMEOVER
+        if (userBalance<10000)
+        {
+            printResult(userBalance);
+            break;
+        }
+ 
+        //Nếu đủ tiền quay thì thực hiện quay
+        printf("\tBam nut bat ky de quay, bam q de dung\n");
+        char choose = getch();
+        if (choose == 'q' || choose == 'Q')
+        {
+            printResult(userBalance);
+            break;
+        }
+ 
+        userBalance = withdraw(userBalance, 10000);
+        int prizeNum = getPrizeNum();
+ 
+        //Kiểm tra giá trị nhận được, cộng và trừ vào số tiền hiện có tương ứng
+        if (prizeNum==2)
+            userBalance = add (userBalance,10000);
+        else if (prizeNum==3)
+            userBalance = add (userBalance,50000);
+        else if (prizeNum==4)
+            userBalance = add (userBalance,1000000);
+        else if (prizeNum==5)
+            userBalance = add (userBalance,10000000);
+ 
+        printReward(prizeNum);
+    }
+ 
+}
