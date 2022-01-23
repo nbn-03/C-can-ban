@@ -1,1 +1,223 @@
-
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <conio.h>
+#define true 1
+#define false 0
+ 
+typedef struct
+{
+    char hoTen[30];
+    int tuoi;
+    float diemTB;
+} SinhVien;
+ 
+void hienThiThongTinSinhVienTheoDong(SinhVien sv)
+{
+    printf("%20s%10d%10.2f\n",sv.hoTen, sv.tuoi, sv.diemTB);
+}
+ 
+SinhVien nhapThongTinSinhVien ()
+{
+    SinhVien sv;
+ 
+    printf("\tNhap ho ten: ");
+    fflush(stdin);
+    gets(sv.hoTen);
+ 
+    printf("\tNhap tuoi: ");
+    scanf("%d",&sv.tuoi);
+ 
+    printf("\tNhap diem: ");
+    scanf("%f",&sv.diemTB);
+ 
+    return sv;
+}
+ 
+SinhVien* capPhatDanhSachSinhVien(int n)
+{
+    return (SinhVien*)malloc(n*sizeof(SinhVien));
+}
+ 
+SinhVien* chenSinhVienVaoCuoi (SinhVien* ds, int* n)
+{
+    //Cap phat
+    if (ds==NULL || (*n) == 0)
+    {
+        (*n) = 1;
+        ds = capPhatDanhSachSinhVien(*n);
+    }
+    else
+    {
+        (*n) += 1;
+        ds = (SinhVien*)realloc(ds,(*n)*sizeof(SinhVien));
+    }
+    ds[(*n)-1] = nhapThongTinSinhVien();
+ 
+    return ds;
+}
+ 
+SinhVien* nhapDanhSachSoLuongXacDinh (int n)
+{
+    SinhVien* ds = capPhatDanhSachSinhVien(n);
+    for (int i=0; i<n; i++)
+    {
+        printf("\t\tNhap thong tin sinh vien thu %d\n",i+1);
+        ds[i] = nhapThongTinSinhVien();
+    }
+    return ds;
+}
+ 
+SinhVien* nhapDanhSachChuaXacDinhSoLuong(int* n)
+{
+    int stt = 1;
+    SinhVien* ds = NULL;
+    while (true)
+    {
+        //Cap phat
+        if (ds==NULL)
+            ds = capPhatDanhSachSinhVien(stt);
+        else
+            ds = (SinhVien*)realloc(ds,stt*sizeof(SinhVien));
+ 
+        //Nhap
+        printf("\t\tNhap thong tin sinh vien thu %d\n",stt);
+        ds[stt-1] = nhapThongTinSinhVien();
+        stt++;
+ 
+        //Nhap tiep?
+        printf("\tNhap tiep? (bam y de tiep tuc): ");
+        fflush(stdin);
+        char chon;
+        scanf("%c",&chon);
+        if (chon!='y' && chon!='Y')
+            break;
+    }
+    *n = stt-1;
+    return ds;
+}
+ 
+int timChiSoTheoTen (SinhVien* ds, int n, char* tenCanTim)
+{
+    for (int i=0; i<n; i++)
+        if (strcmp(ds[i].hoTen,tenCanTim)==0)
+        {
+            return i;
+        }
+    return -1;
+}
+ 
+SinhVien* xoaSinhVien(SinhVien* ds, int* n, int chiSo)
+{
+    if (chiSo<0 || chiSo>=*n)
+        return ds;
+ 
+    //Dich mang
+    for (int i=chiSo; i<(*n)-1; i++)
+    {
+        ds[i] = ds[i+1];
+    }
+    (*n)--;
+    ds = (SinhVien*) realloc(ds, (*n)*sizeof(SinhVien));
+    return ds;
+}
+ 
+void hienThiDanhSachSinhVien (SinhVien* ds, int n)
+{
+    printf("\t\tDANH SACH SINH VIEN\n");
+    printf("\t%5s%20s%10s%10s\n","STT","HO TEN","TUOI","DIEM TB");
+    int stt = 1;
+    for (int i=0; i<n; i++)
+    {
+        printf("\t%5d",stt++);
+        hienThiThongTinSinhVienTheoDong(ds[i]);
+    }
+}
+ 
+void suaSinhVienTheoTen (SinhVien* ds, int n, char* tenCanSua)
+{
+    int chiSo = timChiSoTheoTen(ds,n,tenCanSua);
+    if (chiSo<0)
+        return;
+    printf("\tNhap lai thong tin cho sinh vien %s\n",tenCanSua);
+    ds[chiSo] = nhapThongTinSinhVien();
+}
+ 
+void inMenu()
+{
+    printf("\t\tMENU\n");
+    printf("\t1. Tao danh sach sinh vien\n");
+    printf("\t2. Hien thi danh sach sinh vien\n");
+    printf("\t3. Chen them mot sinh vien\n");
+    printf("\t4. Xoa mot sinh vien\n");
+    printf("\t5. Sua mot sinh vien\n");
+    printf("\t6. Ket thuc\n");
+    printf("\t\tVui long chon: ");
+}
+ 
+int main()
+{
+    SinhVien* ds = NULL;
+    int n = 0;
+ 
+    while (true)
+    {
+        system("cls");
+        inMenu();
+ 
+        int chon;
+        scanf("%d",&chon);
+        system("cls");
+ 
+        if (chon==1)
+        {
+            if (ds!=NULL)
+                free(ds);
+            printf("\tBan da chon nhap danh sach sinh vien\n");
+            printf("\tVui long nhap thong tin cho cac sinh vien\n");
+            ds = nhapDanhSachChuaXacDinhSoLuong(&n);
+        }
+        else if (chon==2)
+        {
+            hienThiDanhSachSinhVien(ds,n);
+        }
+        else if (chon==3)
+        {
+            printf("\tBan da chon chen them sinh vien\n");
+            printf("\tNhap thong tin sinh vien muon chen\n");
+            ds = chenSinhVienVaoCuoi(ds,&n);
+        }
+        else if (chon==4)
+        {
+            printf("\tBan da chon xoa mot sinh vien\n");
+            printf("\tNhap ho ten sinh vien can xoa: ");
+            char tenCanXoa[30];
+            fflush(stdin);
+            gets(tenCanXoa);
+            int chiSo = timChiSoTheoTen(ds,n,(char*)tenCanXoa);
+            ds = xoaSinhVien(ds,&n,chiSo);
+        }
+        else if (chon==5)
+        {
+            printf("\tBan da chon sua mot sinh vien\n");
+            printf("\tNhap ho ten sinh vien can sua: ");
+            char tenCanSua[30];
+            fflush(stdin);
+            gets(tenCanSua);
+            suaSinhVienTheoTen(ds,n,tenCanSua);
+        }
+        else if (chon==6)
+        {
+            printf("\t\tBYE!\n");
+            free(ds);
+            ds = NULL;
+            return 0;
+        }
+        else
+            printf("\tVui long chi nhap tu 1 den 6\n");
+ 
+ 
+        printf("\tBam nut bat ky de ve menu\n");
+        getch();
+    }
+}
