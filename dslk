@@ -1,0 +1,350 @@
+//Linked list
+// giữa 2 node có thể con trỏ chèn ở giữa
+#include <stdio.h>
+#include<stdlib.h>
+#include <conio.h>
+#include<windows.h>
+#include<stdbool.h>
+typedef struct node
+{
+    int data;
+    struct node* next;
+} node;
+node* head = NULL;
+node* capphatnode()
+{
+    return (node*)malloc(sizeof(node));
+}
+int nhapdata()
+{
+    int n;
+    scanf("%d",&n);
+    return n;
+}
+node* createNode()
+{
+    node* pNode=capphatnode();
+    pNode->data = nhapdata();
+    pNode->next = NULL;
+    // pNode trỏ tới next rồi next trỏ đến null
+    return pNode;
+}
+void themdau()
+{
+    node* p;
+    p = createNode();
+    if(head==NULL)
+    {
+        head = p;
+    }
+    else 
+    {
+        // giữa các node có thể sự xuất hiện của con trỏ
+        p->next = head;
+        head = p;
+    }
+}
+void themcuoi()
+{
+    node* temp;
+    temp = createNode();
+    if(head==NULL)
+    {
+        head = temp;
+    }
+    else
+    {
+        node* p = head;
+        while(p -> next != NULL)
+        {
+            p = p -> next;
+        }
+        p->next = temp;
+    }   
+}
+void themvitribatky()
+{
+    int vitri;
+    int vitri1;
+    printf("Mời bạn nhập vị trí cần thêm: ");
+    scanf("%d",&vitri1);
+    printf("\n");
+    vitri = vitri1-1;
+    if(vitri==0 || head == NULL)
+    {
+        node* p;
+    p = createNode();
+    if(head == NULL)
+    {
+        head = p;
+    }
+    else 
+    {
+        // giữa các node có thể sự xuất hiện của con trỏ
+        p->next = head;
+        head = p;
+    }
+    }
+    else
+    {
+    int h=0;
+    for(node* i=head;i!=NULL;i=i->next)
+    {
+        h=h+1;
+    }
+        node* temp = createNode();
+        node* p = head;
+        if(vitri>h)
+        {
+            for(int i=0;i<h-1;i++)
+            {
+                p=p->next;
+            }
+            p->next=temp;
+        }
+        else
+        {
+            for(int i=0;i<vitri;i++)
+            {
+                p=p->next;
+            }
+            temp->next=p->next;
+            p->next=temp;
+            //tạo 2 kết nối nếu đảo thứ tự thì sẽ mất phần sau của ds ban đầu
+        }
+    }
+}
+void xoanodedau()
+{
+    if(head == NULL)
+    {
+        printf("Không có Node\n");
+    }
+    else
+        head=head->next;
+}
+void xoacuoi()
+{
+    if(head == NULL)
+    {
+        printf("Không có Node\n");
+    }
+    else if(head -> next == NULL)
+    {
+        head = head -> next;
+    }
+    else
+    {
+        node* p = head;
+        while(p->next->next!=NULL)
+        {
+            p=p->next;
+        }
+        p->next = NULL;
+    }
+}
+void xoanodebatky()
+{
+    int vitr1;
+    printf("Mời bạn nhập vị trí xóa: ");
+    scanf("%d",&vitr1);
+    printf("\n");
+    int vitr = vitr1-1;
+    if(head == NULL)
+    {
+        printf("Không có Node\n");
+    }
+    else if(vitr==0 || (head -> next == NULL))
+    {
+        head=head->next;
+    }
+    else
+    {
+        int k=0;
+    for(node* i=head;i!=NULL;i=i->next)
+    {
+        k=k+1;
+    }
+        node* p = head;
+        if(vitr>k)
+        {
+            for(int i=0;i<k-2;i++)
+            {
+                p=p->next;
+            }
+            p->next = NULL;
+        }
+        else
+        {
+           for(int i=0;i<vitr-1;i++)
+            {
+                p=p->next;
+            }
+            p->next = p->next->next; 
+        }
+    }
+}
+void hienthinode()
+{
+    if(head == NULL)
+    {
+        printf("\t Danh sách không nó node\n");
+    }
+    else
+    {
+        for(node* i=head;i!=NULL;i=i->next)
+    {
+        printf("%d",i->data);
+    }
+    }
+}
+void laydata()
+{
+    int vt1;
+    printf("Mời bạn nhập vị trí lấy data: ");
+    scanf("%d",&vt1);
+    printf("\n");
+    int vt = vt1-1;
+    int l=0;
+    for(node* i=head;i!=NULL;i=i->next)
+    {
+        l=l+1;
+    }
+    if(vt>l)
+    {
+        printf("Vị trí bạn nhập là sai\n");
+    }
+    else
+    {
+        node* p = head;
+        int z=0;
+        while(z!=vt)
+        {
+            z = z+1;
+            p = p->next;
+        }
+        printf("%d",p->data);
+    }
+}
+void timkiem()
+{
+    int value;
+    scanf("%d",&value);
+    int pos=0;
+    int po=0;
+    for(node* i= head;i!=NULL;i=i->next)
+    {
+        if(i->data==value)
+        {
+            printf("Node thứ %d\n",pos+1);
+            po = po + 1;
+        }
+        pos = pos+1;
+    }
+    if(po==0)
+    {
+        printf("Không có giá trị cần tìm\n");
+    }
+}
+void menu()
+{
+    printf("\t MENU\n");
+    printf("\t 1.Thêm đầu\n");
+    printf("\t 2.Thêm cuối\n");
+    printf("\t 3.Thêm vị trí bất kì\n");
+    printf("\t 4.Xóa đầu\n");
+    printf("\t 5.Xóa Cuối\n");
+    printf("\t 6.Xóa vị trí bất kỳ\n");
+    printf("\t 7.Lấy data\n");
+    printf("\t 8.Tìm kiếm giá trị\n");
+    printf("\t 9.Hiển thị danh sách\n");
+    printf("\t 10.Thoát chương trình\n");
+}
+int main()
+{
+    SetConsoleOutputCP(65001);
+    int chon;
+    while(true)
+    {
+        menu();
+        printf("\t Mời bạn chon: ");
+        scanf("%d",&chon);
+        printf("\n");
+        switch(chon)
+        {
+            case 1:
+                       system("cls");
+                      themdau();
+                      printf("\n");
+                      printf("\tBấm phím bất kỳ để trở về menu ");
+                      getch();
+                      break;
+            case 2:
+                       system("cls");
+                      themcuoi();
+                      printf("\n");
+                      printf("\tBấm phím bất kỳ để trở về menu ");
+                      getch();
+                      break;
+            case 3:
+                       system("cls");
+                      themvitribatky();
+                      printf("\n");
+                      printf("\tBấm phím bất kỳ để trở về menu ");
+                      getch();
+                      break;
+            case 4:
+                       system("cls");
+                      xoanodedau();
+                      printf("\n");
+                      printf("\tBấm phím bất kỳ để trở về menu ");
+                      getch();
+                      break;
+            case 5: 
+                       system("cls");
+                      xoacuoi();
+                      printf("\n");
+                      printf("\tBấm phím bất kỳ để trở về menu ");
+                      getch();
+                      break;
+            case 6:
+                       system("cls");
+                      xoanodebatky();
+                      printf("\n");
+                      printf("\tBấm phím bất kỳ để trở về menu ");
+                      getch();
+                      break;
+            case 7:
+                       system("cls");
+                      laydata();
+                      printf("\n");
+                      printf("\tBấm phím bất kỳ để trở về menu ");
+                      getch();
+                      break;
+            case 8: 
+                       system("cls");
+                      timkiem();
+                      printf("\n");
+                      printf("\tBấm phím bất kỳ để trở về menu ");
+                      getch();
+                      break;
+            case 9:
+                       system("cls");
+                      hienthinode();
+                      printf("\n");
+                      printf("\tBấm phím bất kỳ để trở về menu ");
+                      getch();
+                      break;
+            case 10:
+                       system("cls");
+                      printf("\tBấm phím bất kỳ để thoát chương trình: ");
+                      getch();
+                      printf("\n");
+                      printf("\tTạm Biệt\n");
+                      exit(0);
+            default:
+                       system("cls");
+                      printf("------------------>Nhập từ 1 đến 10\n");
+        }
+    }
+}
