@@ -1,5 +1,5 @@
 //Linked list
-// giữa 2 node có thể con trỏ chèn ở giữa
+// giữa 2 node có thể con trỏ chèn ở giữa( bản chất con trỏ là mang địa chỉ của node đang trỏ vào)
 #include <stdio.h>
 #include<stdlib.h>
 #include <conio.h>
